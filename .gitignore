@@ -1,1 +1,3 @@
+.gitignore
+# Ignore output QR code images
 output_qr
