@@ -12,19 +12,19 @@ from qrcode.image.styles.colormasks import SolidFillColorMask
 # =========================
 # CONFIG
 # =========================
-QR_LINK = "https://google.com"
-LOGO_SOURCE = "C:/Users/user/Pictures/sample-logo.png"  # atau URL
+QR_LINK = "https://fasto.id?signup=true&ref=DBE9A4A6"
+LOGO_SOURCE = "C:/Users/user/Pictures/main-logo.png"  # atau URL
 
 OUTPUT_DIR = "output_qr"       # <-- folder output (bisa absolute path juga)
 OUTPUT_FILE = "qr_barcode.png" # <-- nama file output
 
-BOX_SIZE = 18
-BORDER = 6
-MIN_VERSION = 10
+BOX_SIZE = 20       # Artinya: ukuran 1 kotak/modul QR dalam pixel.
+BORDER = 6          # border modul putih di sekeliling QR   
+MIN_VERSION = 11    # Artinya: tingkat kompleksitas QR (berapa banyak modul).
 
 # logo config
-LOGO_SCALE = 0.20
-WHITE_PAD_RATIO = 0.22
+LOGO_SCALE = 0.30
+WHITE_PAD_RATIO = 0.08
 
 # logo rounding
 PAD_SHAPE = "rounded"          # "circle" atau "rounded"
