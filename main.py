@@ -1,4 +1,5 @@
 import io
+import os
 import requests
 import qrcode
 from PIL import Image, ImageDraw
@@ -11,8 +12,10 @@ from qrcode.image.styles.colormasks import SolidFillColorMask
 # CONFIG
 # =========================
 QR_LINK = "https://google.com"
-LOGO_SOURCE = "C:/Users/user/Pictures/main-logo.png"  # atau URL
-OUTPUT_FILE = "qr_barcode.png"
+LOGO_SOURCE = "C:/Users/user/Pictures/sample-logo.png"  # atau URL
+
+OUTPUT_DIR = "output_qr"       # <-- folder output (bisa absolute path juga)
+OUTPUT_FILE = "qr_barcode.png" # <-- nama file output
 
 BOX_SIZE = 18
 BORDER = 6
@@ -24,8 +27,8 @@ WHITE_PAD_RATIO = 0.22
 
 # logo rounding
 PAD_SHAPE = "rounded"          # "circle" atau "rounded"
-PAD_RADIUS_RATIO = 0.13       # hanya dipakai kalau PAD_SHAPE="rounded"
-PAD_MARGIN_PX = 0             # kalau mau pad sedikit lebih kecil: misal 4 atau 8
+PAD_RADIUS_RATIO = 0.13        # hanya dipakai kalau PAD_SHAPE="rounded"
+PAD_MARGIN_PX = 0              # kalau mau pad sedikit lebih kecil: misal 4 atau 8
 
 # style: pilih salah satu
 STYLE = "rounded"   # "rounded" atau "dots"
@@ -120,6 +123,7 @@ def punch_out_center_pixel(qr_img: Image.Image, n_data: int):
     # NOTE: tidak menggambar rectangle putih lagi
     return qr_img, (x0, y0, x1, y1)
 
+
 def place_logo(qr_img: Image.Image, logo: Image.Image, bbox):
     x0, y0, x1, y1 = bbox
     box_w, box_h = x1 - x0, y1 - y0
@@ -149,7 +153,7 @@ def place_logo(qr_img: Image.Image, logo: Image.Image, bbox):
     # 1) blank QR sesuai SHAPE (bukan kotak)
     out = qr_img.copy()
     white_layer = Image.new("RGBA", (box_w, box_h), (255, 255, 255, 255))
-    out.paste(white_layer, (x0, y0), mask)  # mask menentukan area putih berbentuk circle/rounded
+    out.paste(white_layer, (x0, y0), mask)
 
     # 2) tempel pad putih (agar tepi anti-aliasing halus)
     out.paste(pad, (x0, y0), pad)
@@ -168,11 +172,16 @@ def place_logo(qr_img: Image.Image, logo: Image.Image, bbox):
 
     return out
 
+
 if __name__ == "__main__":
     qr_img, n_data = make_styled_qr(QR_LINK)
     punched, bbox = punch_out_center_pixel(qr_img, n_data)
     logo = load_logo(LOGO_SOURCE)
     final = place_logo(punched, logo, bbox)
 
-    final.save(OUTPUT_FILE)
-    print("OK:", OUTPUT_FILE)
+    # ====== SAVE TO FOLDER ======
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    output_path = os.path.join(OUTPUT_DIR, OUTPUT_FILE)
+
+    final.save(output_path)
+    print("OK:", output_path)
