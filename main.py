@@ -1,5 +1,6 @@
 import io
 import os
+from datetime import datetime  # <-- ADD
 import requests
 import qrcode
 from PIL import Image, ImageDraw
@@ -179,9 +180,13 @@ if __name__ == "__main__":
     logo = load_logo(LOGO_SOURCE)
     final = place_logo(punched, logo, bbox)
 
-    # ====== SAVE TO FOLDER ======
+    # ====== SAVE TO FOLDER (WITH TIMESTAMP) ======
     os.makedirs(OUTPUT_DIR, exist_ok=True)
-    output_path = os.path.join(OUTPUT_DIR, OUTPUT_FILE)
+
+    ts = datetime.now().strftime("%Y%m%d_%H%M%S")  # aman untuk Windows (tanpa ':')
+    name, ext = os.path.splitext(OUTPUT_FILE)
+    output_filename = f"{name}_{ts}{ext}"
+    output_path = os.path.join(OUTPUT_DIR, output_filename)
 
     final.save(output_path)
     print("OK:", output_path)
